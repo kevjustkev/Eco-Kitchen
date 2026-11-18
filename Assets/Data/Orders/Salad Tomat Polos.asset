@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8b133be6a19864bae7860c70be87c8, type: 3}
+  m_Name: Salad Tomat Polos
+  m_EditorClassIdentifier: Assembly-CSharp::OrderData
+  orderName: Salad Tomat Polos
+  customerLine: Saya pesan salad Tomat Polos, ya!
+  ingredients:
+  - ingredient: {fileID: 11400000, guid: d215bfd15c74eb541a8aba5c85a87fa2, type: 2}
+    amount: 2
+  dressingRule: 1
+  dressing: {fileID: 0}
+  forbidden: []
+  basePrice: 22000
+  perfectBonus: 5000
+  patienceSeconds: 50
+  unlockDay: 2
