@@ -25,4 +25,4 @@ MonoBehaviour:
   basePrice: 20000
   perfectBonus: 5000
   patienceSeconds: 60
-  unlockDay: 1
+  unlockDay: 2

@@ -36,6 +36,8 @@ public class Customer : Interactable
     public bool IsVip => vipOrders != null;
 
     public OrderData Order => order;
+    /// <summary>True saat pelanggan sedang menunggu pesanan di counter.</summary>
+    public bool IsWaiting => state == State.Waiting;
 
     /// <summary>Dipanggil DayManager saat pelanggan biasa dibuat.</summary>
     public void Setup(OrderData newOrder, Vector3 counterPosition, Vector3 exitPosition)

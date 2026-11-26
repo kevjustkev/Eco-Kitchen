@@ -19,13 +19,35 @@ public class CuttingStation : Interactable
     [Tooltip("Opsional: Image (Image Type = Filled) di Canvas world space sebagai bar progres")]
     public UnityEngine.UI.Image progressFill;
 
-    private IngredientData onBoard;   // bahan yang sedang dipotong
+    [Header("Mode potong")]
+    [Tooltip("Centang = memotong lewat panel ala Cooking Mama (ikuti garis dengan mouse). " +
+             "Matikan = mode lama, tekan E berkali-kali.")]
+    public bool useCuttingPanel = true;
+
+    [Header("Hasil potong mode panel (potongan bahan / sisa organik)")]
+    public int perfectYield = 2;
+    public int perfectWaste = 1;
+    public int goodYield = 1;
+    public int goodWaste = 1;
+    public int badYield = 1;
+    public int badWaste = 2;
+
+    private bool PanelMode => useCuttingPanel && CuttingPanelUI.Instance != null;
+
+    private IngredientData onBoard;   // bahan yang sedang dipotong (mode lama)
     private int chops;                // jumlah potongan saat ini
 
     void Start() => UpdateVisual();
 
     public override string GetPromptText()
     {
+        if (PanelMode)
+        {
+            IngredientData item = FindCuttable();
+            return item == null ? $"{displayName}: tidak ada bahan untuk dipotong"
+                                : $"Tekan E untuk memotong {item.displayName}";
+        }
+
         if (onBoard != null)
             return $"Tekan E untuk memotong {onBoard.displayName} {ProgressBar()}";
 
@@ -36,6 +58,7 @@ public class CuttingStation : Interactable
 
     public override string GetSecondaryPromptText()
     {
+        if (PanelMode) return null;
         return onBoard != null ? $"Tekan Q untuk mengambil kembali {onBoard.displayName}" : null;
     }
 
@@ -43,6 +66,27 @@ public class CuttingStation : Interactable
     {
         var inv = InventoryManager.Instance;
         if (inv == null) return;
+
+        // ---- Mode panel: ikuti garis dengan pisau ----
+        if (PanelMode)
+        {
+            IngredientData raw = FindCuttable();
+            if (raw == null)
+            {
+                ShowMessage("Tidak ada bahan yang bisa dipotong!");
+                return;
+            }
+
+            inv.RemoveItem(raw); // bahan ditaruh di talenan
+            CuttingPanelUI.Instance.Open(raw,
+                grade => GiveResult(raw, grade),
+                () =>
+                {
+                    inv.AddItem(raw); // batal: bahan dikembalikan
+                    ShowMessage($"Batal memotong {raw.displayName}");
+                });
+            return;
+        }
 
         // Belum ada bahan di talenan: ambil dari inventory
         if (onBoard == null)
@@ -70,6 +114,28 @@ public class CuttingStation : Interactable
         }
 
         UpdateVisual();
+    }
+
+    /// <summary>Memberikan hasil potong sesuai nilai dari panel.</summary>
+    private void GiveResult(IngredientData raw, CutGrade grade)
+    {
+        var inv = InventoryManager.Instance;
+        if (inv == null || raw.cutResult == null) return;
+
+        int yield, waste;
+        string label;
+        switch (grade)
+        {
+            case CutGrade.Perfect: yield = perfectYield; waste = perfectWaste; label = "PERFECT!"; break;
+            case CutGrade.Good: yield = goodYield; waste = goodWaste; label = "GOOD"; break;
+            default: yield = badYield; waste = badWaste; label = "BAD"; break;
+        }
+
+        if (yield > 0) inv.AddItem(raw.cutResult, yield);
+        if (raw.wasteResult != null && waste > 0) inv.AddItem(raw.wasteResult, waste);
+
+        string wasteText = raw.wasteResult != null && waste > 0 ? $" + {waste} {raw.wasteResult.displayName}" : "";
+        ShowMessage($"{label} {yield} {raw.cutResult.displayName}{wasteText}");
     }
 
     public override void InteractSecondary()

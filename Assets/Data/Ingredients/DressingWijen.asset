@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a0d3c1c01c265d439d433bfb8a04c47, type: 3}
-  m_Name: Selada Potong
+  m_Name: DressingWijen
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
-  displayName: Selada Potong
+  displayName: DressingWijen
   icon: {fileID: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   cutResult: {fileID: 0}
   wasteResult: {fileID: 0}
   chopsRequired: 3
-  canGoInBowl: 1
-  isDressing: 0
-  buyPrice: 0
+  canGoInBowl: 0
+  isDressing: 1
+  harvestResult: {fileID: 0}
+  harvestAmount: 2
+  growSeconds: 60
+  buyPrice: 2000
