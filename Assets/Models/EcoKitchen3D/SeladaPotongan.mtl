@@ -1,0 +1,25 @@
+# Material SeladaPotongan - Eco Kitchen
+newmtl SeladaDaun
+Ka 1 1 1
+Kd 0.4200 0.7000 0.2700
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl SeladaDaunMuda
+Ka 1 1 1
+Kd 0.6200 0.8200 0.3800
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl SeladaTulang
+Ka 1 1 1
+Kd 0.8400 0.9400 0.6600
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+

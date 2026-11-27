@@ -20,6 +20,9 @@ MonoBehaviour:
   chopsRequired: 3
   canGoInBowl: 0
   isDressing: 0
+  model3D: {fileID: 919132149155446097, guid: 9539f92fa79a31144abaceef1a8d4a40, type: 3}
+  halfModel3D: {fileID: 0}
+  modelScale: 1
   harvestResult: {fileID: 0}
   harvestAmount: 2
   growSeconds: 60

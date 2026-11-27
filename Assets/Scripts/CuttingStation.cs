@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -32,7 +33,22 @@ public class CuttingStation : Interactable
     public int badYield = 1;
     public int badWaste = 2;
 
-    private bool PanelMode => useCuttingPanel && CuttingPanelUI.Instance != null;
+    [Tooltip("Centang = memotong lewat minigame 3D (butuh komponen Cutting Minigame 3D di objek ini). " +
+             "Diutamakan di atas panel 2D.")]
+    public bool useMinigame3D = true;
+
+    private CuttingMinigame3D minigame3D;
+    private bool Mode3D => useMinigame3D && Find3D() != null;
+
+    // cari komponen 3D di objek ini, anaknya, atau induknya
+    private CuttingMinigame3D Find3D()
+    {
+        if (minigame3D == null) minigame3D = GetComponent<CuttingMinigame3D>();
+        if (minigame3D == null) minigame3D = GetComponentInChildren<CuttingMinigame3D>();
+        if (minigame3D == null) minigame3D = GetComponentInParent<CuttingMinigame3D>();
+        return minigame3D;
+    }
+    private bool PanelMode => Mode3D || (useCuttingPanel && CuttingPanelUI.Instance != null);
 
     private IngredientData onBoard;   // bahan yang sedang dipotong (mode lama)
     private int chops;                // jumlah potongan saat ini
@@ -78,13 +94,15 @@ public class CuttingStation : Interactable
             }
 
             inv.RemoveItem(raw); // bahan ditaruh di talenan
-            CuttingPanelUI.Instance.Open(raw,
-                grade => GiveResult(raw, grade),
-                () =>
-                {
-                    inv.AddItem(raw); // batal: bahan dikembalikan
-                    ShowMessage($"Batal memotong {raw.displayName}");
-                });
+            Action<CutGrade> done = grade => GiveResult(raw, grade);
+            Action cancel = () =>
+            {
+                inv.AddItem(raw); // batal: bahan dikembalikan
+                ShowMessage($"Batal memotong {raw.displayName}");
+            };
+            Debug.Log($"[CuttingStation] {name}: useMinigame3D={useMinigame3D}, komponen 3D {(Find3D() != null ? "ada" : "TIDAK ADA")} -> mode {(Mode3D ? "3D" : "panel 2D")}");
+            if (Mode3D) minigame3D.Begin(raw, done, cancel);
+            else CuttingPanelUI.Instance.Open(raw, done, cancel);
             return;
         }
 

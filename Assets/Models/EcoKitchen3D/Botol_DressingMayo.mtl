@@ -1,0 +1,25 @@
+# Material Botol_DressingMayo - Eco Kitchen
+newmtl Botol_DressingMayo_Badan
+Ka 1 1 1
+Kd 0.9900 0.9600 0.8100
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl Botol_DressingMayo_Tutup
+Ka 1 1 1
+Kd 0.8400 0.2500 0.2000
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl Botol_DressingMayo_Label
+Ka 1 1 1
+Kd 1.0000 0.8400 0.3600
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+

@@ -8,6 +8,8 @@ public class AssemblyStation : Interactable
 {
     [Tooltip("Opsional: objek mangkuk di atas meja yang muncul saat mangkuk berisi")]
     public GameObject bowlVisual;
+    [Tooltip("Centang untuk memakai minigame 3D (butuh komponen AssemblyMinigame3D di objek ini)")]
+    public bool useMinigame3D = true;
 
     public SaladBowl Bowl { get; private set; } = new SaladBowl();
 
@@ -34,6 +36,17 @@ public class AssemblyStation : Interactable
             Bowl = carry.Drop();
             UpdateVisual();
             ShowMessage("Salad ditaruh kembali di meja");
+        }
+
+        // Mode 3D: kalau komponen AssemblyMinigame3D terpasang dan dicentang
+        var minigame3D = GetComponent<AssemblyMinigame3D>();
+        if (minigame3D == null) minigame3D = GetComponentInChildren<AssemblyMinigame3D>();
+        if (minigame3D == null) minigame3D = GetComponentInParent<AssemblyMinigame3D>();
+        Debug.Log($"[AssemblyStation] {name}: useMinigame3D={useMinigame3D}, komponen 3D {(minigame3D != null ? "ada" : "TIDAK ADA di objek ini")}");
+        if (useMinigame3D && minigame3D != null && minigame3D.enabled)
+        {
+            minigame3D.Begin(this);
+            return;
         }
 
         if (AssemblyPanelUI.Instance == null)
@@ -101,7 +114,7 @@ public class AssemblyStation : Interactable
         return true;
     }
 
-    private void UpdateVisual()
+    public void UpdateVisual()
     {
         if (bowlVisual != null) bowlVisual.SetActive(!Bowl.IsEmpty);
     }

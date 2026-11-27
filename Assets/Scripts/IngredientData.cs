@@ -35,6 +35,17 @@ public class IngredientData : ScriptableObject
     [Tooltip("Centang jika item ini adalah dressing. Satu mangkuk hanya boleh satu dressing.")]
     public bool isDressing = false;
 
+    [Header("Model 3D (minigame 3D)")]
+    [Tooltip("Model 3D bahan ini. Bahan mentah: model utuh (tomato, lettuce). " +
+             "Bahan potong: model potongan (TomatIrisan, SeladaPotongan). Dressing: model botol.")]
+    public GameObject model3D;
+
+    [Tooltip("Opsional, khusus bahan mentah: model setengah bagian (TomatBelah) untuk efek terbelah saat dipotong")]
+    public GameObject halfModel3D;
+
+    [Tooltip("Pengali ukuran model 3D bahan ini")]
+    public float modelScale = 1f;
+
     [Header("Benih (kebun)")]
     [Tooltip("Isi jika item ini BENIH: hasil panennya (misalnya Benih Selada -> Selada). Kosongkan untuk item biasa.")]
     public IngredientData harvestResult;

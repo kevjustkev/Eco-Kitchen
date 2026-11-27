@@ -1,0 +1,33 @@
+# Material TomatIrisan - Eco Kitchen
+newmtl TomatKulit
+Ka 1 1 1
+Kd 0.8000 0.1400 0.1100
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl TomatDaging
+Ka 1 1 1
+Kd 0.9300 0.3400 0.2700
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl TomatBiji
+Ka 1 1 1
+Kd 0.9800 0.6200 0.4200
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl TomatInti
+Ka 1 1 1
+Kd 0.8800 0.2800 0.2300
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+

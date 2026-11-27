@@ -1,0 +1,25 @@
+# Material Botol_DressingWijen - Eco Kitchen
+newmtl Botol_DressingWijen_Badan
+Ka 1 1 1
+Kd 0.7700 0.5600 0.3100
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl Botol_DressingWijen_Tutup
+Ka 1 1 1
+Kd 0.3600 0.2400 0.1400
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+
+newmtl Botol_DressingWijen_Label
+Ka 1 1 1
+Kd 0.9800 0.9100 0.7700
+Ks 0.1 0.1 0.1
+Ns 16
+d 1.0
+illum 2
+

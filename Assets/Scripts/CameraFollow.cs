@@ -85,6 +85,20 @@ public class CameraFollow : MonoBehaviour
         transform.rotation = rotation;
     }
 
+    /// <summary>Posisi dan arah kamera yang diinginkan saat ini (dipakai CameraFocus untuk kembali dengan halus).</summary>
+    public void GetDesiredPose(out Vector3 position, out Quaternion rotation)
+    {
+        Vector3 pivot = target != null ? target.position + targetOffset : currentPivot;
+        rotation = Quaternion.Euler(pitch, yaw, 0f);
+        position = pivot - rotation * Vector3.forward * distance;
+    }
+
+    /// <summary>Langsung menyamakan titik ikut dengan posisi pemain (tanpa efek menyusul).</summary>
+    public void SnapToTarget()
+    {
+        if (target != null) currentPivot = target.position + targetOffset;
+    }
+
     void OnValidate()
     {
         if (minDistance > maxDistance) minDistance = maxDistance;
