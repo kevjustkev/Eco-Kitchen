@@ -24,6 +24,11 @@ public class DayManager : MonoBehaviour
     [Tooltip("Pelanggan baru tidak datang jika sisa waktu kurang dari ini (detik)")]
     public float lastCallSeconds = 15f;
 
+    [Header("Fase Persiapan (Revisi 1)")]
+    [Tooltip("Jika dicentang, pelanggan baru datang setelah pemain membuka restoran lewat ShopSign. " +
+             "Waktu hari berhenti selama persiapan, jadi pemain sempat panen, kompos, potong, dan racik dulu.")]
+    public bool requirePrepPhase = true;
+
     [Header("Pelanggan")]
     public Customer customerPrefab;
     public Transform spawnPoint;
@@ -55,6 +60,10 @@ public class DayManager : MonoBehaviour
     public DayStats Total { get; private set; } = new DayStats();
     public bool IsGameOver { get; private set; }
     public bool MegaOrderToday { get; private set; }
+    /// <summary>True jika restoran sudah dibuka hari ini (pelanggan boleh datang).</summary>
+    public bool IsShopOpen { get; private set; }
+
+    public event Action OnShopOpened;
 
     public event Action<int> OnDayStarted;
     public event Action<int, DayStats> OnDayEnded;
@@ -75,12 +84,21 @@ public class DayManager : MonoBehaviour
     void Start()
     {
         setupValid = ValidateSetup();
+
+        // Pengaman: tanpa ShopSign di scene, fase persiapan tidak bisa diakhiri
+        if (requirePrepPhase && FindFirstObjectByType<ShopSign>() == null)
+        {
+            Debug.LogWarning("DayManager: tidak ada ShopSign di scene, Require Prep Phase dimatikan.");
+            requirePrepPhase = false;
+        }
+
         StartDay(1);
     }
 
     void Update()
     {
         if (IsGameOver || !IsDayRunning || !setupValid) return;
+        if (!IsShopOpen) return; // masih fase persiapan, waktu dan pelanggan belum jalan
 
         if (TimeLeft > 0f)
         {
@@ -107,12 +125,27 @@ public class DayManager : MonoBehaviour
 
         MegaOrderToday = MegaConditionsMet();
         megaSpawned = false;
+        IsShopOpen = !requirePrepPhase;
 
         if (NotificationUI.Instance != null)
+        {
+            string prep = requirePrepPhase ? " Siapkan bahan dulu, lalu buka restoran di papan." : "";
             NotificationUI.Instance.Show(MegaOrderToday
-                ? $"Hari {day} dimulai! Pelanggan VIP akan datang dengan MEGA ORDER!"
-                : $"Hari {day} dimulai!");
+                ? $"Hari {day} dimulai! Pelanggan VIP akan datang dengan MEGA ORDER!{prep}"
+                : $"Hari {day} dimulai!{prep}");
+        }
         OnDayStarted?.Invoke(day);
+    }
+
+    /// <summary>Dipanggil ShopSign saat pemain membuka restoran. Waktu hari dan pelanggan mulai berjalan.</summary>
+    public void OpenShop()
+    {
+        if (IsShopOpen || IsGameOver || !IsDayRunning) return;
+
+        IsShopOpen = true;
+        nextSpawnTime = Time.time + 2f;
+        if (NotificationUI.Instance != null) NotificationUI.Instance.Show("Restoran dibuka! Pelanggan mulai berdatangan.");
+        OnShopOpened?.Invoke();
     }
 
     private void EndDay()

@@ -69,6 +69,25 @@ public class IngredientSource : Interactable
         ShowMessage($"Mengambil {ingredient.displayName}");
     }
 
+    // Tombol Q: simpan bahan yang dibawa (misalnya hasil belanja di pasar) ke peti
+    public override string GetSecondaryPromptText()
+    {
+        if (ingredient == null || IsInfinite || InventoryManager.Instance == null) return null;
+        int have = InventoryManager.Instance.GetCount(ingredient);
+        return have > 0 ? $"Tekan Q untuk menyimpan {have} {ingredient.displayName} ke peti" : null;
+    }
+
+    public override void InteractSecondary()
+    {
+        if (ingredient == null || IsInfinite || InventoryManager.Instance == null) return;
+        int have = InventoryManager.Instance.GetCount(ingredient);
+        if (have <= 0) return;
+
+        InventoryManager.Instance.RemoveItem(ingredient, have);
+        AddStock(have);
+        ShowMessage($"Menyimpan {have} {ingredient.displayName} ke {displayName}");
+    }
+
     /// <summary>Menambah stok (dipanggil Market saat membeli).</summary>
     public void AddStock(int amount)
     {
